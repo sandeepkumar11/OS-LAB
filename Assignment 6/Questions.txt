@@ -1,0 +1,2 @@
+Que 1. Write the code for Producer and Consumer classical process syncronization code.
+Que 2. Write the code for Reader and Writer classical process syncronization code.
