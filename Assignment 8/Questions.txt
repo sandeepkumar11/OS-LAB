@@ -1,0 +1,1 @@
+Que 1. Implement the dining philosophers problem using semaphore and monitor in C. 
