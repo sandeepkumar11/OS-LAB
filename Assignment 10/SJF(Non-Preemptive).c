@@ -1,143 +1,92 @@
-#include<stdio.h>
-
-#include<conio.h>
-
-void main()
-
-{
-
-      clrscr();
-
-      int n,temp,tt=0,min,d,i,j;
-
-      float atat=0,awt=0,stat=0,swt=0;
-
-      printf("Enter no of process: ");
-
-      scanf("%d",&n);
-
-      int a[10],b[10],e[10],tat[10],wt[10];
-
-      for(i=0;i<n;i++)
-
-      {
-
-    printf("Enter arrival time P[%d]: ",i+1);       //input
-
-    scanf("%d",&a[i]);
-
-      }
-
-      for(i=0;i<n;i++)
-
-      {
-
-    printf("Enter burst time P[%d]: ",i+1);      //input
-
-    scanf("%d",&b[i]);
-
-      }
-
-      for(i=0;i<n;i++)
-
-      {
-
-for(j=i+1;j<n;j++)
-
-  {
-
-if(b[i]>b[j])
-
-{
-
-      temp=a[i];
-
-      a[i]=a[j];
-
-      a[j]=temp;
-
-      temp=b[i];
-
-      b[i]=b[j];
-
-      b[j]=temp;
-
-                }
-
-          }
-
-      }
-
-      min=a[0];
-
-      for(i=0;i<n;i++)
-
-      {
-
-            if(min>a[i])
-
-            {
-
-                  min=a[i];
-
-                  d=i;
-
-            }
-
-      }
-
-      tt=min;
-
-      e[d]=tt+b[d];
-
-      tt=e[d];
-
-      for(i=0;i<n;i++)
-
-      {
-
-            if(a[i]!=min)
-
-            {
-
-                  e[i]=b[i]+tt;
-
-                  tt=e[i];
-
-            }
-
-      }
-
-      for(i=0;i<n;i++)
-
-      {
-
-            tat[i]=e[i]-a[i];
-
-            stat=stat+tat[i];
-
-            wt[i]=tat[i]-b[i];
-
-            swt=swt+wt[i];
-
-      }
-
-      atat=stat/n;
-
-      awt=swt/n;
-
-      printf("Process  Arrival-time(s)  Burst-time(s)  Waiting-time(s)  Turnaround-time(s)\n");
-
-    for(i=0;i<n;i++)
-
-    {
-
-    printf("P%d\t\t%d\t\t%d\t\t%d\t\t%d\n",i+1,a[i],b[i],wt[i],tat[i]);
-
-    }
-
-    printf("awt=%f\natat=%f",awt,atat);  //average waiting time and turn around time
-
-    getch();
-
+#include<iostream> 
+using namespace std; 
+int mat[10][6]; 
+  
+void swap(int *a, int *b) 
+{ 
+    int temp = *a; 
+    *a = *b; 
+    *b = temp; 
+} 
+  
+void arrangeArrival(int num, int mat[][6]) 
+{ 
+    for(int i=0; i<num; i++) 
+    { 
+        for(int j=0; j<num-i-1; j++) 
+        { 
+            if(mat[j][1] > mat[j+1][1]) 
+            { 
+                for(int k=0; k<5; k++) 
+                { 
+                    swap(mat[j][k], mat[j+1][k]); 
+                } 
+            } 
+        } 
+    } 
+} 
+  
+void completionTime(int num, int mat[][6]) 
+{ 
+    int temp, val; 
+    mat[0][3] = mat[0][1] + mat[0][2]; 
+    mat[0][5] = mat[0][3] - mat[0][1]; 
+    mat[0][4] = mat[0][5] - mat[0][2]; 
+      
+    for(int i=1; i<num; i++) 
+    { 
+        temp = mat[i-1][3]; 
+        int low = mat[i][2]; 
+        for(int j=i; j<num; j++) 
+        { 
+            if(temp >= mat[j][1] && low >= mat[j][2]) 
+            { 
+                low = mat[j][2]; 
+                val = j; 
+            } 
+        } 
+        mat[val][3] = temp + mat[val][2]; 
+        mat[val][5] = mat[val][3] - mat[val][1]; 
+        mat[val][4] = mat[val][5] - mat[val][2]; 
+        for(int k=0; k<6; k++) 
+        { 
+            swap(mat[val][k], mat[i][k]); 
+        } 
+    } 
+} 
+  
+int main() 
+{ 
+    int num, temp; 
+      
+    cout<<"Enter number of Process: "; 
+    cin>>num; 
+      
+    cout<<"...Enter the process ID...\n"; 
+    for(int i=0; i<num; i++) 
+    { 
+        cout<<"...Process "<<i+1<<"...\n"; 
+        cout<<"Enter Process Id: "; 
+        cin>>mat[i][0]; 
+        cout<<"Enter Arrival Time: "; 
+        cin>>mat[i][1]; 
+        cout<<"Enter Burst Time: "; 
+        cin>>mat[i][2]; 
+    } 
+      
+    cout<<"Before Arrange...\n"; 
+    cout<<"Process ID\tArrival Time\tBurst Time\n"; 
+    for(int i=0; i<num; i++) 
+    { 
+        cout<<mat[i][0]<<"\t\t"<<mat[i][1]<<"\t\t"<<mat[i][2]<<"\n"; 
+    } 
+      
+    arrangeArrival(num, mat); 
+    completionTime(num, mat); 
+    cout<<"Final Result...\n"; 
+    cout<<"Process ID\tArrival Time\tBurst Time\tWaiting Time\tTurnaround Time\n"; 
+    for(int i=0; i<num; i++) 
+    { 
+        cout<<mat[i][0]<<"\t\t"<<mat[i][1]<<"\t\t"<<mat[i][2]<<"\t\t"<<mat[i][4]<<"\t\t"<<mat[i][5]<<"\n"; 
+    } 
 }
